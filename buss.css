@@ -1,0 +1,110 @@
+body{                        /* --- Body tag för hur hela sidan ska se ut --- */
+height: 100%;
+background-color: #1C54A2;
+top:100;
+}
+.buss{
+  color: deepskyblue; /* --- Rubrik,Centrering och Färg--- */
+  text-align: center;
+}
+#sok{      
+  display: block;     /* --- id till ex.Nätgränd med förstoringsglass--- */
+  margin-right: auto;
+  margin-left: auto;
+  border: 3px solid darkblue;
+  padding: 15px;
+  border-radius: 35px;
+  font-size: 22px;
+  padding-left: 50px;
+  background: oldlace;
+  background-image:url(magnifying.png);
+  background-repeat:no-repeat;
+  background-position: 10px;
+}
+
+
+
+/* ---Hela knappen hover (KOLLA knappen.) --- */ 
+#unik1{
+  background-color: rgb(26, 176, 31);   
+  border: none;
+  padding: 16px 32px;
+  font-size: 10px;
+  margin: 2px 1px;                       
+  -webkit-transition-duration: 0,4s; 
+  transition-duration: 0.4s;
+  cursor: pointer;
+  border-radius: 35px;
+}
+#unik1 {         /* ---Styling KOLLA knappen. --- */ 
+  color:black;
+  background-color: 2px solid #4CAF50;
+  border: 2px solid darkblue;
+}
+#unik1:hover {                  /* ---Styling KOLLA knappen. --- */ 
+  background-color: cornsilk;
+  color: black;
+}
+#unik1{           /* ---Styling KOLLA knappen. --- */ 
+ display: block;
+ margin: 0 auto;
+ margin-left: auto;                          
+
+
+/* --Hållplats--- */
+}
+#border-webkit{ 
+  text-align:center; 
+  font-size: 30px;
+  color: aquamarine;
+  font-family: 'Overlock', cursive;
+/* ------------------------------*/
+
+}
+/* --text under bussbild---*/
+#text{
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  color: cornsilk;
+  margin-right: auto;
+  font-size: 15px;
+}
+/* ---------------------*/
+
+
+/* ------Bussbild-------*/
+#bus{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* --------------------*/
+
+/* -----Skugga på Buss-text-----*/
+h1 {
+  -webkit-text-stroke: 0,5px black;
+  text-shadow:
+      1px 1px 0 #000,
+     1px -1px 0 #000,  
+     1px -1px 0 #000,
+     -1px 1px 0 #000,
+      1px 1px 0 #000;
+}
+
+/* -----Busstabellen styling-----*/
+#information{ 
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  background-color:cornsilk;
+  width:25%;
+  font-family: optima;
+}
+#stol, th, td {                /* -----Table styling ram-----*/
+  border: 5px double black;
+}
+#header{                        /* -----Table styling på rubrik/stationsnamn-----*/
+  background-color: #e7d9d9;
+}

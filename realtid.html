@@ -1,0 +1,68 @@
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Read JSON Data</title>
+</head>
+
+<body>
+<button type="button" onclick="visaavgangar(9192)">Visa avgångstider</button>
+<button type="button" onclick="visaplatsid()">Visa plats Id</button>
+
+<input type="text" id="sok">
+<button type="button" onclick="visaplatsid()">SÖK RESA</button> 
+<p id="sok" ></p>
+
+<!--<script type=text/javascript src="trafik.js"></script-->
+
+  <div id="information"></div>
+
+  <script
+language="javascript">
+function visaplatsid(){ 
+  var stationsnamn = document.getElementById("sok").value;
+  var span = document.getElementById('information');
+     var url1 = "https://cors-anywhere.herokuapp.com/https://api.sl.se/api2/typeahead.json?key=66966c9d8a3c4264989e288a324de6ad&searchstring="+stationsnamn+"&stationsonly=true&maxresults=1";
+
+    var SiteId;
+
+    fetch(url1)
+      .then((resp) => resp.json())
+      .then(function (data) {
+        let infos = data.ResponseData;
+        
+        return infos.map(function (info) {
+          span.innerHTML += info.SiteId + " " + info.Name+ " " + info.Y + "<br>"; 
+          SiteId = info.SiteId;
+          visaavgangar(SiteId);
+
+        })
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    }
+
+    
+    function visaavgangar(siteid){
+
+    
+    var span = document.getElementById('information');
+    var url2 = "https://cors-anywhere.herokuapp.com/http://api.sl.se/api2/realtimedeparturesV4.json?key=8776f629bde540c5928364dad9cce146&siteid="+siteid+"&timewindow=30";
+     
+
+    fetch(url2)
+      .then((resp) => resp.json())
+      .then(function (data) {
+        let infos = data.ResponseData.Buses;
+        return infos.map(function (info) {
+          span.innerHTML += info.LineNumber + " " +  info.Destination +  " " + info.DisplayTime + "<br>";
+        })
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    }
+
+  </script>
+</body>

@@ -1,0 +1,121 @@
+
+<!--Här ritas webbsidan/ tänkta mobilappen ut och länkas till css-->
+
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Overlock&display=swap" rel="stylesheet">     
+    <meta charset="UTF-8">                                                                           
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">                                    
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>När kommer bussen?</title>
+    <link type = "text/css" rel="stylesheet" href="buss.css">
+    <link rel=icon  href="magnifying-glass.png">
+</head>
+<body> 
+    <br>  
+    <br> 
+    <h1 class="buss">Hallå! Kommer bussen?</h1><br>
+    <div id="border-webkit">Välj Hållplats</div><br>
+    <input class="center-block" id="sok" type="text" placeholder=SÖK.....><br><br>
+    <button class="center-block" id="unik1" onclick="visaplatsid()" type="button">KOLLA!</button> <br><br>
+   <img src="bus-stop.png" id="bus">
+    <div id="text">Hos oss på PI åker du <br>tryggt och miljösmart.<br><br>Välkommen!</div><br>
+    <table class="center-block" id="information"></table>
+   <!----------------------------------------------------------------------------------------------->
+
+    <!--Skapat 2 funktioner en som  hämtar data, getData och en som sparar data,
+    saveData. SaveData sparar senaste sökningen i sökfältet.-->
+
+    <script language="javascript">
+      getdata(); // funktionen som hämtar data.
+      function visaplatsid(){ 
+      savedata(); // funktionen som sparar data.
+      var stationsnamn = document.getElementById("sok").value;  // Sökning som hämtar id:et när man klickar på sök.
+      var span = document.getElementById('information');  
+         var url1 = "https://cors-anywhere.herokuapp.com/https://api.sl.se/api2/typeahead.json?key=66966c9d8a3c4264989e288a324de6ad&searchstring="+stationsnamn+"&stationsonly=true&maxresults=1";
+    
+        var SiteId;
+    
+        fetch(url1)                    
+          .then((resp) => resp.json())
+          .then(function (data) {
+            let infos = data.ResponseData;
+            return infos.map(function (info) {
+              //span.innerHTML+= info.SiteId + " " + info.Name+ " " + info.Y + "<br>";  // Tar bort tidigare skriven rad (buss nummer och namn och något annat nummer.)
+              SiteId = info.SiteId;
+              visaavgangar(SiteId);
+            })
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        }
+    
+        function visaavgangar(siteid){
+        var span = document.getElementById('information');
+        span.innerHTML= "<tr id='header'><th> Linje </th><th> Destination </th><th> Gå om </th><th> Tid kvar </th></tr>";
+        var url2 = "https://cors-anywhere.herokuapp.com/http://api.sl.se/api2/realtimedeparturesV4.json?key=8776f629bde540c5928364dad9cce146&siteid="+siteid+"&timewindow=30";
+
+        fetch(url2)        
+          .then((resp) => resp.json())
+          .then(function (data) {
+            let infos = data.ResponseData.Buses;
+            return infos.map(function (info) {
+              
+              var minut = 0;        //Vi skapar en variabel minut och säger om tiden visar Nu ska inget hända. (tom rad annars visa nedre raden).
+              if (info.DisplayTime === "Nu"){
+
+              } else {       // Här räknar man ut om minuterna till hållplatsen och tar bort bussarna man inte hinner med.
+              if(info.DisplayTime.indexOf("min")!=-1)     
+                minut = info.DisplayTime.replace(" min", " ")-3 
+              }
+              if(info.DisplayTime.indexOf(":")!=-1){
+                minut = (Date.parse(info.ExpectedDateTime) - Date())/1000/60;
+              }
+              if (minut > 0){
+                
+              span.innerHTML += "<tr><td>"+ info.LineNumber + "</td><td>" + info.Destination +  "</td><td>" + minut + " min</td><td>"+  info.DisplayTime + "</td></tr>";
+              }        // Här skrivs de olika linjerna ut och med linje,destination och tiden som är kvar till bussen kommer.
+            })    
+          })                         
+          .catch(function (error) {
+            console.log(error);
+          });
+        
+        }                                 
+          function getdata(){   // Data hämtas från den station som skrivs in i söklfältet och hämtar den från id=sok (sökfältet).
+          const url = "https://cors-anywhere.herokuapp.com/http://primat.se/services/data/jacobehnvall@gmail.com-sl.json";
+          fetch(url)
+          .then((resp) => resp.json()) 
+          .then(function(data) {
+          let users = data.data;
+          return users.map(function(user) { 
+          document.getElementById("sok").value = user.station;
+
+          })
+           }) 
+          } 
+          function savedata(){   // Data sparas från det som skrivits in från getdata(). Avgångarna skrivs ut och håller kvar sökningen i sökfälltet.
+          var spara = document.getElementById("sok").value; 
+          const url1 = "https://cors-anywhere.herokuapp.com/http://primat.se/services/sendform.aspx?xid=sl&xmail=jacobehnvall@gmail.com&station="+spara;
+          fetch(url1)
+          .then((resp) => resp.json())
+          .then(function (data) {
+            let infos = data.data;
+            
+            return infos.map (function (info) {   // Data skrivs ut från id:n.
+              document.getElementById("information").value+=info.station;
+              SiteId = info.SiteId;
+              visaavgangar(SiteId);
+            })
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        }
+  </script>
+
+    
+    </body>
+</html> 
